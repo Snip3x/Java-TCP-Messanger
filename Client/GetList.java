@@ -3,12 +3,14 @@ package Client;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
 //This Window Shows all the data received from LIST request
-public class GetList {
+public class ListResult {
 
 	private JFrame frame;
 	private JTable table;
@@ -25,7 +27,7 @@ public class GetList {
 	/**
 	 * Create the application.
 	 */
-	public GetList(String data) {
+	public ListResult(String data) {
 		this.data = data;
 		initialize();
 	}
@@ -77,6 +79,13 @@ public class GetList {
 		lTotal.setText(lTotal.getText()+""+data[0]);
 		for(int i=1;i<data.length;i++)
 			model.addRow(new Object[] {data[i]});
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+	            if(!event.getValueIsAdjusting())
+	            	Commands.getReq(table.getValueAt(table.getSelectedRow(), 0).toString());
+	        }
+	    });
 		
 		
 	}

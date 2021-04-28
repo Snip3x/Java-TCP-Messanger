@@ -222,7 +222,7 @@ public class Commands {
 						Start.DataOutStream.writeUTF(selectHeader.getSelectedItem().toString()+"##"+contentText.getText()+"##"+listTime.getText());
 						Start.DataOutStream.flush();
 						//Sending Received Response from to Viewer Window
-						new GetList(Start.DataInStream.readUTF()).start();
+						new ListResult(Start.DataInStream.readUTF()).start();
 						
 						
 					}
@@ -237,21 +237,8 @@ public class Commands {
 //Added Get Request Functionality 
 		getReq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					//Telling server That Get request is coming
-					Start.DataOutStream.writeUTF("Get");
-					Start.DataOutStream.flush();
-					//Sending Hash to Search
-					Start.DataOutStream.writeUTF(textHash.getText());
-					Start.DataOutStream.flush();
-					//Getting result and passing to GET result window
-					new GetResult(Start.DataInStream.readUTF()).start();
-					
-					
-					
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				String hash = textHash.getText();
+				getReq(hash);
 				
 			}
 		});
@@ -282,5 +269,27 @@ public class Commands {
 	             }
 	          }
 	       });
+	}
+	
+	public static void getReq(String hash) {
+		try {
+			
+			if(!(hash.contains("SHA-256 ")))
+				hash="SHA-256 "+hash;
+				
+			//Telling server That Get request is coming
+			Start.DataOutStream.writeUTF("Get");
+			Start.DataOutStream.flush();
+			//Sending Hash to Search
+			Start.DataOutStream.writeUTF(hash);
+			Start.DataOutStream.flush();
+			//Getting result and passing to GET result window
+			new GetResult(hash+"--"+Start.DataInStream.readUTF()).start();
+			
+			
+			
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 }

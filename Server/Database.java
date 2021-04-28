@@ -50,7 +50,7 @@ public class Database {
         ResultSet res =  stat.executeQuery(q);
        int count =0;
         while(res.next()){
-           ret += "--"+res.getString("Hashid");
+           ret += "--"+res.getString("Hashid").replace("SHA-256 ", "");
             count++;
             
         }
