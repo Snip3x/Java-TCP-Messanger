@@ -1,6 +1,7 @@
 package Server;
 
 import java.sql.Statement;
+import java.time.Instant;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -44,8 +45,8 @@ public class Database {
         
 		try {
 			con = DriverManager.getConnection(jdc);
-			//query to get data
-        String q = "Select Hashid From Message Where "+arr[0]+"= '"+arr[1]+"' And Time<="+arr[2];
+			//query to List Request
+        String q = "Select Hashid From Message Where "+arr[0]+"= '"+arr[1]+"' And Time>="+arr[2]+" And Time<="+String.valueOf(Instant.now().getEpochSecond());
         Statement stat = con.createStatement();
         ResultSet res =  stat.executeQuery(q);
        int count =0;
@@ -63,7 +64,7 @@ public class Database {
 	}
 	
 	
-	//Getting Data for List Request
+	//Getting Data for get Request
 	public static String getMessage(String hash) {
 		String ret = "";
 		String jdc = "jdbc:sqlite:politeDB.sqlite3";

@@ -3,8 +3,6 @@ package Client;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -80,12 +78,7 @@ public class ListResult {
 		for(int i=1;i<data.length;i++)
 			model.addRow(new Object[] {data[i]});
 		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-	        public void valueChanged(ListSelectionEvent event) {
-	            if(!event.getValueIsAdjusting())
-	            	Commands.getReq(table.getValueAt(table.getSelectedRow(), 0).toString());
-	        }
-	    });
+		
 		
 		
 	}

@@ -10,10 +10,12 @@ import java.time.Instant;
 public class MultiServer implements Runnable{
 	Socket socket;
 	Listener listener;
+	boolean protocolAccepted;
 	//This Server Handles all the request from assigned Client
 	public MultiServer(Socket s, Listener listener) {
 		this.socket = s;
 		this.listener = listener;
+		this.protocolAccepted = false;
 	}
     public void run(){
        while(true) { 
@@ -32,17 +34,21 @@ public class MultiServer implements Runnable{
     			   dataOut.writeInt(0);
     			   dataOut.flush();
     			   }
-    		   }else if(choice.equals("List")) {//List Section
+    		   }else if(choice.equals("List") && protocolAccepted) {//List Section
     			   String result=Database.getData(dataIn.readUTF());
     			   dataOut.writeUTF(result);
     			   dataOut.flush();
     			   
-    		   }else if(choice.equals("Get")) {//Get Section
+    		   }else if(choice.equals("Get") && protocolAccepted) {//Get Section
     			   dataOut.writeUTF(Database.getMessage(dataIn.readUTF()));
     			   dataOut.flush();
-    		   }else if(choice.equals("Time")) {//Time Section
+    		   }else if(choice.equals("Time") && protocolAccepted) {//Time Section
     			   dataOut.writeUTF("Server Time: "+String.valueOf(Instant.now().getEpochSecond()));
-    		   }else if(choice.equals("Bye")) {//Close the thread
+    		   }else if(choice.equals("Protocol")) { //Checking Protocol
+    			   if(dataIn.readInt()==7)
+    				   protocolAccepted = true;//Accepting Connection as Protocol was accepted
+    			   		System.out.println("Protocol Accepted");
+    		   }else if(choice.equals("Bye" )) {//Close the thread
     			   dataIn.close();
     			   dataOut.close();
     			   socket.close();

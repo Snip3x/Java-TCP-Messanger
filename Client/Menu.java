@@ -91,7 +91,17 @@ public class Menu {
 		btnCommand.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Opening Commands Window
-					new Commands().start();
+					try {
+						//Sending Protocol Request this will unlock all the commands like GET and LIST
+						Start.DataOutStream.writeUTF("Protocol");
+						Start.DataOutStream.flush();
+						Start.DataOutStream.writeInt(7);				
+						new Commands().start();
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					
 				
 			}
